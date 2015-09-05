@@ -5,6 +5,10 @@ A web application that streams data using the Twitter API
 * socket.io
 
 ### Installation
-Run npm install 
+```bash
+npm install
+```
 ### Usage
+```bash
 node app.js
+```
