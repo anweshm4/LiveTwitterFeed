@@ -1,5 +1,17 @@
-var Twit = require('twit');
-var TWEETS_BUFFER_SIZE = 3;
+var express = require('express')
+  , app = express()
+  , http = require('http')
+  , server = http.createServer(app)
+  ,Twit = require('twit')
+  , io = require('socket.io').listen(server);
+  
+server.listen(3000)
+  
+// routing
+app.get('/', function (req, res) {
+res.sendFile(__dirname + '/index.html');
+});
+
  
 var T = new Twit({
     consumer_key:         'vJD82vdHpb3QyQwIC6ycmdFAL',
@@ -8,35 +20,41 @@ var T = new Twit({
     access_token_secret:  'YheEYKey3hK1a2fVynnnxQtpUShR6JvV8NBrRyzjkxKgp'
 })
 
-console.log("Listening for tweets from all around the world...");
-var stream = T.stream('statuses/filter', { locations: [-180,-90,180,90] });
-var tweetsBuffer = [];
+io.sockets.on('connection', function (socket) {
+  console.log('Connected');
+
+
+	console.log("Listening for tweets from all around the world...");
+	var stream = T.stream('statuses/filter', { locations: [-180,-90,180,90] });
+	var tweetsBuffer = [];
  
-stream.on('connect', function(request) {
-    console.log('Connected to Twitter API');
+	stream.on('connect', function(request) {
+    	console.log('Connected to Twitter API');
+	});
+ 
+	stream.on('disconnect', function(message) {
+    	console.log('Disconnected from Twitter API. Message: ' + message);
+	});
+ 
+	stream.on('reconnect', function (request, response, connectInterval) {
+  	  console.log('Trying to reconnect to Twitter API in ' + connectInterval + ' ms');
+	})
+ 
+	stream.on('tweet', function(tweet) {
+    	if (tweet.geo == null) {
+        	return ;
+    	}
+ 
+    	//Create message containing tweet + username + profile pic + geo
+    	var msg = {};
+    	msg.text = tweet.text;
+    	msg.geo = tweet.geo.coordinates;
+    	msg.user = {
+        	name: tweet.user.name,
+        	image: tweet.user.profile_image_url
+    	};
+ 
+    	io.sockets.emit('stream', tweet.geo.coordinates);
+		//console.log(msg);
+	})
 });
- 
-stream.on('disconnect', function(message) {
-    console.log('Disconnected from Twitter API. Message: ' + message);
-});
- 
-stream.on('reconnect', function (request, response, connectInterval) {
-  console.log('Trying to reconnect to Twitter API in ' + connectInterval + ' ms');
-})
- 
-stream.on('tweet', function(tweet) {
-    if (tweet.geo == null) {
-        return ;
-    }
- 
-    //Create message containing tweet + username + profile pic + geo
-    var msg = {};
-    msg.text = tweet.text;
-    msg.geo = tweet.geo.coordinates;
-    msg.user = {
-        name: tweet.user.name,
-        image: tweet.user.profile_image_url
-    };
- 
-    console.log(msg);
-})
