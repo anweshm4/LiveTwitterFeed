@@ -5,9 +5,10 @@
    	<meta charset="utf-8">
    	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+   
  	<script src="/socket.io/socket.io.js"></script>
   	<script>
 		var socket = io.connect('http://localhost:3000');
@@ -21,17 +22,19 @@
 					$("#startstream").html('Stop Twitter Stream');
 					
 					socket.on('image', function(tweet){
-        				$('#tweetd').append('<image src='+tweet+' />');
+        				$('#tweetd').append('<image src='+tweet+' class="pull-right" />').fadeIn('500');
 						
         			});
         		
 					socket.on('username', function(tweet){
-        				$('#tweetd').append(tweet+'<br>');
+        				$('#tweetd').append('<b>'+tweet+'<br>').fadeIn('1000');
 					});
 				
 					socket.on('tweet', function(tweet){
-        				$('#tweetd').append(tweet+'<br> <hr>');
+        				$('#tweetd').append(tweet+'<br> <hr>').fadeIn('2000');
 					});
+					
+					$('#tweetd').addClass('panel panel-default');
 				}
 				
 				else {
@@ -46,11 +49,18 @@
 		
   </script>
 </head>
-<body>
-	<div class="container">
-		<h1 class="text-center"> Twitter Live Feed </h1>
-		<button type="button" class="btn btn-primary btn-md" id="startstream">Start Twitter Stream</button>
-		<div id="tweetd" class="panel panel-default"></div>
+<body ng-app="myApp">
+	<div class="container" ng-controller="MainController">
+		<h1 class="text-center">{{ title }}</h1>
+		<button type="button" class="btn btn-primary btn-md center-block" id="startstream">{{ button }}</button> <br>
+		<div id="tweetd"></div>
 	</div>
+	<script src="node_modules/angular/angular.min.js"></script>
+   	<script src="js/app.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/controllers/MainController.js" type="text/javascript" charset="utf-8"></script>
+   
+   
+	
+	
 </body>
 </html>

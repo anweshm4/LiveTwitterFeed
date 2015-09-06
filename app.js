@@ -12,6 +12,8 @@ app.get('/', function (req, res) {
 res.sendFile(__dirname + '/index.html');
 });
 
+app.use(express.static(__dirname + '/'));
+
  
 var T = new Twit({
     consumer_key:         'vJD82vdHpb3QyQwIC6ycmdFAL',
@@ -21,11 +23,10 @@ var T = new Twit({
 })
 
 io.sockets.on('connection', function (socket) {
-  console.log('Connected');
+  	console.log('Connected');
 
-
-	console.log("Listening for tweets from all around the world...");
-	var stream = T.stream('statuses/filter', { locations: [-180,-90,180,90] });
+	console.log("Listening to tweets from all around the world...");
+	var stream = T.stream('statuses/sample')
 	var tweetsBuffer = [];
  
 	stream.on('connect', function(request) {
