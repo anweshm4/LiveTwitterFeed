@@ -54,7 +54,10 @@ io.sockets.on('connection', function (socket) {
         	image: tweet.user.profile_image_url
     	};
  
-    	io.sockets.emit('stream', tweet.geo.coordinates);
+    	io.sockets.emit('username', tweet.user.name);
+    	io.sockets.emit('image', tweet.user.profile_image_url);
+    	io.sockets.emit('tweet', tweet.text);
+		
 		//console.log(msg);
 	})
 });

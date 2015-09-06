@@ -1,11 +1,56 @@
- <script src="/socket.io/socket.io.js"></script>
-   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.js"></script>
-  <script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Twitter Live Feed</title>
+   	<meta charset="utf-8">
+   	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-        var socket = io.connect('http://localhost:3000');
-        socket.on('stream', function(tweet){
-        $('#tweetd').append(tweet+'<br>');
-        });
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+ 	<script src="/socket.io/socket.io.js"></script>
+  	<script>
+		var socket = io.connect('http://localhost:3000');
+	
+		$(function(){
+	    	$('#startstream').click(function() {
+				$button=$(this);
+				$button.toggleClass('on');
+				
+				if($button.is(".on")) {
+					$("#startstream").html('Stop Twitter Stream');
+					
+					socket.on('image', function(tweet){
+        				$('#tweetd').append('<image src='+tweet+' />');
+						
+        			});
+        		
+					socket.on('username', function(tweet){
+        				$('#tweetd').append(tweet+'<br>');
+					});
+				
+					socket.on('tweet', function(tweet){
+        				$('#tweetd').append(tweet+'<br> <hr>');
+					});
+				}
+				
+				else {
+					$("#startstream").html('Start Twitter Stream');
+					socket.disconnect();
+				}
+			});		
+		});
+		
+		
+		
+		
   </script>
-  <div id="tweetd"></div>
-</div>
+</head>
+<body>
+	<div class="container">
+		<h1 class="text-center"> Twitter Live Feed </h1>
+		<button type="button" class="btn btn-primary btn-md" id="startstream">Start Twitter Stream</button>
+		<div id="tweetd" class="panel panel-default"></div>
+	</div>
+</body>
+</html>
