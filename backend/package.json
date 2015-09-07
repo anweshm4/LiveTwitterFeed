@@ -1,0 +1,29 @@
+{
+  "name": "livetwitterfeed",
+  "version": "0.0.1",
+  "description": "A web application that streams data using the Twitter API",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "3.x",
+    "socket.io": "0.9.16",
+    "twit": "1.1.13"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anweshm4/LiveTwitterFeed.git"
+  },
+  "keywords": [
+    "node.js",
+    "AngularJS",
+    "twitter"
+  ],
+  "author": "Anwesh Mishra",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anweshm4/LiveTwitterFeed/issues"
+  },
+  "homepage": "https://github.com/anweshm4/LiveTwitterFeed#readme"
+}
